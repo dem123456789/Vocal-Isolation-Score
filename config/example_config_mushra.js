@@ -10,8 +10,8 @@ var TestConfig = {
   "ShowResults": false,
   "LoopByDefault": true,
   "EnableABLoop": true,
-  "EnableOnlineSubmission": false,
-  "BeaqleServiceURL": "",
+  "EnableOnlineSubmission": true,
+  "BeaqleServiceURL": "http://www.prism.gatech.edu/~ediao3/beaqleJS_Service.php",
   "SupervisorContact": "",
   "RandomizeTestOrder": false,
   "MaxTestsPerRun": 3,
@@ -19,48 +19,26 @@ var TestConfig = {
   "Testsets": [
     //    
     {
-      "Name": "Schubert 1",
-      "TestID": "id1_1",
+      "Name": "Schubert",
       "Files": {
-            "Reference": "audio/schubert_ref.wav",
-            "1": "audio/schubert_1.wav",
-            "2": "audio/schubert_2.wav",
-            "3": "audio/schubert_3.wav",
-            "4": "audio/schubert_anch.wav",
-        }
-    },
-    {
-      "Name": "Schubert 2",
-      "TestID": "id1_2",
-      "Files": {
-            "Reference": "audio/schubert_ref.wav",
-            "1": "audio/schubert_1.wav",
-            "2": "audio/schubert_2.wav",
-            "3": "audio/schubert_3.wav",
-            "4": "audio/schubert_anch.wav",
-        }
-    },
-    {
-      "Name": "Schubert 3",
-      "TestID": "id1_3",
-      "Files": {
-            "Reference": "audio/schubert_ref.wav",
-            "1": "audio/schubert_1.wav",
-            "2": "audio/schubert_2.wav",
-            "3": "audio/schubert_3.wav",
-            "4": "audio/schubert_anch.wav",
+            "Reference": "audio/01_ref.mp3",
+			"Mix": "audio/01_ref.mp3",
+            "1": "audio/01.mp3",
+            "2": "audio/01.mp3",
+            "3": "audio/01.mp3",
+            "4": "audio/01.mp3",
         }
     },
     //    
     {
-       "Name": "Castanets",
-       "TestID": "id2_1",
+      "Name": "Castanets",
        "Files": {
-            "Reference": "audio/castanets_ref.wav",
-            "1": "audio/castanets_1.wav",
-            "2": "audio/castanets_2.wav",
-            "3": "audio/castanets_3.wav",
-            "4": "audio/castanets_anch.wav",
+            "Reference": "audio/02_ref.mp3",
+			"Mix": "audio/02_ref.mp3",			
+            "1": "audio/02.mp3",
+            "2": "audio/02.mp3",
+            "3": "audio/02.mp3",
+            "4": "audio/02.mp3",
         }
     },
   ]
