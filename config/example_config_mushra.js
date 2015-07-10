@@ -27,7 +27,8 @@ var TestConfig = {
             "2": "audio/01.mp3",
             "3": "audio/01.mp3",
             "4": "audio/01.mp3",
-        }
+        },
+	  "Instruction": 1
     },
     //    
     {
@@ -39,7 +40,8 @@ var TestConfig = {
             "2": "audio/02.mp3",
             "3": "audio/02.mp3",
             "4": "audio/02.mp3",
-        }
+        },
+	   "Instruction": 2
     },
   ]
 }

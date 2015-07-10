@@ -589,7 +589,7 @@ $.extend({ alert: function (message, title) {
         $('#TestIntroduction').hide();
         $('#TestControls').hide();
         $('#TableContainer').hide();
-		$('#InstructionContainer').show();
+		$('#InstructionContainer').hide();
         $('#PlayerControls').hide();
         $('#LoadOverlay').show();
                 
@@ -960,11 +960,32 @@ MushraTest.prototype.createTestDOM = function (TestIdx) {
             $('#TableContainer > table').remove();
         }
 
+		// clear old instruction
+        if ($('#InstructionContainer > P')) {
+            $('#InstructionContainer > P').remove();
+        }
+		
         // create random file mapping if not yet done
         if (!this.TestState.FileMappings[TestIdx]) {
                 this.createFileMapping(TestIdx);
         }
 
+		// create new instruction text		
+		var para = document.createElement('P');
+		if (this.TestConfig.Testsets[TestIdx].Instruction == 1) {		
+			var txt = document.createTextNode("Instruction 1: Most important: use high quality studio headphones and a good soundcard! \
+				Listen through all test files and test sets before you do any ratings to get used to the material. \
+				Rate the quality of the test items only compared to the reference on top. \
+				Try to rate the overall impression of a test item and don't concentrate on single aspects.");
+		} else if (this.TestConfig.Testsets[TestIdx].Instruction == 2) {
+			var txt = document.createTextNode("Instruction 2: Most important: use high quality studio headphones and a good soundcard! \
+				Listen through all test files and test sets before you do any ratings to get used to the material. \
+				Rate the quality of the test items only compared to the reference on top. \
+				Try to rate the overall impression of a test item and don't concentrate on single aspects.");
+		}
+		para.appendChild(txt);
+		$('#InstructionContainer').append(para);
+		
         // create new test table
         var tab = document.createElement('table');
         tab.setAttribute('id','TestTable');
