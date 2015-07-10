@@ -486,6 +486,7 @@ $.extend({ alert: function (message, title) {
             if (confirm('This was the last test. Do you want to finish?')) {
             
                 $('#TableContainer').hide();
+				$('#InstructionContainer').hide();
                 $('#PlayerControls').hide();
                 $('#TestControls').hide();
                 $('#TestEnd').show();
@@ -588,6 +589,7 @@ $.extend({ alert: function (message, title) {
         $('#TestIntroduction').hide();
         $('#TestControls').hide();
         $('#TableContainer').hide();
+		$('#InstructionContainer').hide();
         $('#PlayerControls').hide();
         $('#LoadOverlay').show();
                 
@@ -658,6 +660,7 @@ $.extend({ alert: function (message, title) {
         if ((this.TestState.AudiosInLoadQueue==0) && (this.TestState.AudioLoadError==false)) {
             $('#TestControls').show();
             $('#TableContainer').show();
+			$('#InstructionContainer').show();
             $('#PlayerControls').show();       
             $('#LoadOverlay').hide();
         }
@@ -957,11 +960,32 @@ MushraTest.prototype.createTestDOM = function (TestIdx) {
             $('#TableContainer > table').remove();
         }
 
+		// clear old instruction
+        if ($('#InstructionContainer > P')) {
+            $('#InstructionContainer > P').remove();
+        }
+		
         // create random file mapping if not yet done
         if (!this.TestState.FileMappings[TestIdx]) {
                 this.createFileMapping(TestIdx);
         }
 
+		// create new instruction text		
+		var para = document.createElement('P');
+		if (this.TestConfig.Testsets[TestIdx].Instruction == 1) {		
+			var txt = document.createTextNode("Instruction 1: Most important: use high quality studio headphones and a good soundcard! \
+				Listen through all test files and test sets before you do any ratings to get used to the material. \
+				Rate the quality of the test items only compared to the reference on top. \
+				Try to rate the overall impression of a test item and don't concentrate on single aspects.");
+		} else if (this.TestConfig.Testsets[TestIdx].Instruction == 2) {
+			var txt = document.createTextNode("Instruction 2: Most important: use high quality studio headphones and a good soundcard! \
+				Listen through all test files and test sets before you do any ratings to get used to the material. \
+				Rate the quality of the test items only compared to the reference on top. \
+				Try to rate the overall impression of a test item and don't concentrate on single aspects.");
+		}
+		para.appendChild(txt);
+		$('#InstructionContainer').append(para);
+		
         // create new test table
         var tab = document.createElement('table');
         tab.setAttribute('id','TestTable');
@@ -983,32 +1007,53 @@ MushraTest.prototype.createTestDOM = function (TestIdx) {
         cell[3].innerHTML = "<img id='ScaleImage' src='"+this.TestConfig.RateScalePng+"'/>";  	
         
         this.addAudio(TestIdx, fileID, fileID);
-            
+
+        // add mix
+        fileID = "Mix";
+        row  = tab.insertRow(-1);
+        cell[0] = row.insertCell(-1);
+        cell[0].innerHTML = "<span class='testItem'>Mix</span>";
+        cell[1] = row.insertCell(-1);
+        cell[1].innerHTML =  '<button id="play'+fileID+'Btn" class="playButton" rel="'+fileID+'">Play</button>';
+        cell[2] = row.insertCell(-1);
+        cell[2].innerHTML = "<button class='stopButton'>Stop</button>";  
+
+        this.addAudio(TestIdx, fileID, fileID);	
+		
         // add spacing
         row = tab.insertRow(-1);
         row.setAttribute("height","5"); 
 
         var rateMin = this.TestConfig.RateMinValue;
         var rateMax = this.TestConfig.RateMaxValue;
-            
+
+		var mixflag = 0;
+		var a = 0;		
         // add test items
         for (var i = 0; i < this.TestState.FileMappings[TestIdx].length; i++) { 
-            
+            a = i;           
             var fileID = this.TestState.FileMappings[TestIdx][i];
             var relID  = "";
-            if (fileID === "Reference")
+			if (fileID == "Mix") {
+				mixflag = 1;
+				continue;
+			}
+			if (mixflag == 1) {
+				a = a - 1;
+			}			
+            if (fileID === "Reference") {
                 relID = "HiddenRef";
-            else
+            } else {
                 relID = fileID;
-
-            row[i]  = tab.insertRow(-1);
-            cell[0] = row[i].insertCell(-1);
-            cell[0].innerHTML = "<span class='testItem'>Test Item "+ (i+1)+"</span>";
-            cell[1] = row[i].insertCell(-1);
+			}
+            row[a]  = tab.insertRow(-1);
+            cell[0] = row[a].insertCell(-1);
+            cell[0].innerHTML = "<span class='testItem'>Test Item "+ (a+1)+"</span>";
+            cell[1] = row[a].insertCell(-1);
             cell[1].innerHTML =  '<button id="play'+relID+'Btn" class="playButton" rel="'+relID+'">Play</button>';
-            cell[2] = row[i].insertCell(-1);
+            cell[2] = row[a].insertCell(-1);
             cell[2].innerHTML = "<button class='stopButton'>Stop</button>";  
-            cell[3] = row[i].insertCell(-1);
+            cell[3] = row[a].insertCell(-1);
             var fileIDstr = "";
             if (this.TestConfig.ShowFileIDs) {
                     fileIDstr = fileID;
@@ -1075,12 +1120,12 @@ MushraTest.prototype.formatResults = function () {
             $.each(this.TestState.Ratings[i], function(fileID, rating) { 
                 row  = tab.insertRow(-1);
                 cell = row.insertCell(-1);
-                cell.innerHTML = fileArr[fileID];
+                cell.innerHTML = fileArr[fileID].substr(6);
                 cell = row.insertCell(-1);
                 cell.innerHTML = rating;
 
                 testResult.rating[fileID]   = rating;
-                testResult.filename[fileID] = fileArr[fileID];
+                testResult.filename[fileID] = fileArr[fileID].substr(6);
             });
             
             resultstring += tab.outerHTML + "\n";
