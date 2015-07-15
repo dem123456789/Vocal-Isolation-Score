@@ -14,7 +14,7 @@ var TestConfig = {
   "BeaqleServiceURL": "http://www.prism.gatech.edu/~ediao3/beaqleJS_Service.php",
   "SupervisorContact": "",
   "RandomizeTestOrder": false,
-  "MaxTestsPerRun": 3,
+  "MaxTestsPerRun": 1,
   "RequireMaxRating": false,
   "Testsets": [
     //    
