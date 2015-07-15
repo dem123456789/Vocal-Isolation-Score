@@ -14,12 +14,36 @@ var TestConfig = {
   "BeaqleServiceURL": "http://www.prism.gatech.edu/~ediao3/beaqleJS_Service.php",
   "SupervisorContact": "",
   "RandomizeTestOrder": false,
-  "MaxTestsPerRun": 1,
+  "MaxTestsPerRun": 2,
   "RequireMaxRating": false,
   "Testsets": [
     //    
     {
       "Name": "Schubert",
+      "Files": {
+            "Reference": "audio/01_ref.mp3",
+			"Mix": "audio/01_ref.mp3",
+            "1": "audio/01.mp3",
+            "2": "audio/01.mp3",
+            "3": "audio/01.mp3",
+            "4": "audio/01.mp3",
+        },
+	  "Instruction": 1
+    },
+    {
+      "Name": "Schubert2",
+      "Files": {
+            "Reference": "audio/01_ref.mp3",
+			"Mix": "audio/01_ref.mp3",
+            "1": "audio/01.mp3",
+            "2": "audio/01.mp3",
+            "3": "audio/01.mp3",
+            "4": "audio/01.mp3",
+        },
+	  "Instruction": 1
+    },
+    {
+      "Name": "Schubert3",
       "Files": {
             "Reference": "audio/01_ref.mp3",
 			"Mix": "audio/01_ref.mp3",
