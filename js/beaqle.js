@@ -382,6 +382,7 @@ $.extend({ alert: function (message, title) {
         // some state variables
         this.TestState = {
             "CurrentTest": -1, 		// the current test index
+			"CurrentTask": -1,		// the current task index, showing different instruction
             "TestIsRunning": 0,		// is true if test is running, false when finished or not yet started
             "FileMappings": [],		// json array with random file mappings
             "Ratings": [],			// json array with ratings
@@ -470,16 +471,21 @@ $.extend({ alert: function (message, title) {
         this.pauseAllAudios();
 
         // save ratings from last test
-        if (this.saveRatings(this.TestState.TestSequence[this.TestState.CurrentTest])==false)
+        if (this.saveRatings(this.TestState.CurrentTest, this.TestState.CurrentTask)==false)
             return;
 
         // stop time measurement
         var stopTime = new Date().getTime();
-        this.TestState.Runtime[this.TestState.TestSequence[this.TestState.CurrentTest]] += stopTime - this.TestState.startTime;
+        this.TestState.Runtime[this.TestState.CurrentTest*3+this.TestState.CurrentTask-1] += stopTime - this.TestState.startTime;
 
         // go to next test
-        if (this.TestState.CurrentTest<this.TestState.TestSequence.length-1) {
-            this.TestState.CurrentTest = this.TestState.CurrentTest+1;
+        if (!(this.TestState.CurrentTest == this.TestState.TestSequence.length-1 && this.TestState.CurrentTask == 3)) {
+			if (this.TestState.CurrentTask == 3) {
+				this.TestState.CurrentTask = 1;
+				this.TestState.CurrentTest = this.TestState.CurrentTest+1;
+			} else {
+				this.TestState.CurrentTask = this.TestState.CurrentTask+1;
+			}
         	this.runTest(this.TestState.TestSequence[this.TestState.CurrentTest]);
         } else {
             // if previous test was last one, ask before loading final page and then exit test
@@ -526,16 +532,21 @@ $.extend({ alert: function (message, title) {
 
         this.pauseAllAudios();
 
-        if (this.TestState.CurrentTest>0) {
+        if (!(this.TestState.CurrentTest == 0 && this.TestState.CurrentTask == 1)) {
             // save ratings from last test
-            if (this.saveRatings(this.TestState.TestSequence[this.TestState.CurrentTest])==false)
+            if (this.saveRatings(this.TestState.CurrentTest, this.TestState.CurrentTask)==false)
                 return;
 
             // stop time measurement
             var stopTime = new Date().getTime();
-            this.TestState.Runtime[this.TestState.TestSequence[this.TestState.CurrentTest]] += stopTime - this.TestState.startTime;
+            this.TestState.Runtime[this.TestState.CurrentTest*3+this.TestState.CurrentTask-1] += stopTime - this.TestState.startTime;
             // go to previous test
-            this.TestState.CurrentTest = this.TestState.CurrentTest-1;
+			if (this.TestState.CurrentTask == 1) {
+				this.TestState.CurrentTask = 3;
+				this.TestState.CurrentTest = this.TestState.CurrentTest-1;
+			} else {
+				this.TestState.CurrentTask = this.TestState.CurrentTask-1;
+			}
         	this.runTest(this.TestState.TestSequence[this.TestState.CurrentTest]);
         }
     }
@@ -557,13 +568,14 @@ $.extend({ alert: function (message, title) {
             this.TestState.TestSequence = shuffleArray(this.TestState.TestSequence);
         }
 
-        this.TestState.Ratings = Array(this.TestConfig.Testsets.length);
-        this.TestState.Runtime = new Uint32Array(this.TestConfig.Testsets.length);
+        this.TestState.Ratings = Array(this.TestState.TestSequence.length * 3);
+        this.TestState.Runtime = new Uint32Array(this.TestState.TestSequence.length * 3);
 //        this.TestState.Runtime.forEach(function(element, index, array){array[index] = 0});
         this.TestState.startTime = 0;
 
         // run first test
         this.TestState.CurrentTest = 0;
+		this.TestState.CurrentTask = 1;
     	this.runTest(this.TestState.TestSequence[this.TestState.CurrentTest]);
     }
 
@@ -609,7 +621,7 @@ $.extend({ alert: function (message, title) {
         });
             
         // load and apply already existing ratings
-        if (typeof this.TestState.Ratings[TestIdx] !== 'undefined') this.readRatings(TestIdx);
+        if (typeof this.TestState.Ratings[this.TestState.CurrentTest*3+this.TestState.CurrentTask-1] !== 'undefined') this.readRatings(this.TestState.CurrentTest, this.TestState.CurrentTask);
 
         this.TestState.startTime = new Date().getTime();
             
@@ -625,14 +637,14 @@ $.extend({ alert: function (message, title) {
 
     // ###################################################################
     // read ratings from TestState object
-    ListeningTest.prototype.readRatings = function (TestIdx) {
+    ListeningTest.prototype.readRatings = function (CurrentTestIdx, TaskIdx) {
         // overwrite and implement in inherited class
         alert('Function readRatings() has not been implemented in your inherited class!');
     }
 
     // ###################################################################
     // save ratings to TestState object
-    ListeningTest.prototype.saveRatings = function (TestIdx) {
+    ListeningTest.prototype.saveRatings = function (CurrentTestIdx, TaskIdx) {
         // overwrite and implement in inherited class
         alert('Function saveRatings() has not been implemented in your inherited class!');
     }
@@ -910,16 +922,16 @@ MushraTest.prototype.createFileMapping = function (TestIdx) {
 
 // ###################################################################
 // read ratings from TestState object
-MushraTest.prototype.readRatings = function (TestIdx) {
+MushraTest.prototype.readRatings = function (CurrentTestIdx, TaskIdx) {
     
-    if ((TestIdx in this.TestState.Ratings)==false) return false;
+    if ((3*CurrentTestIdx+TaskIdx-1 in this.TestState.Ratings)==false) return false;
     
     var testObject = this;
     $(".rateSlider").each( function() {
         var pos = $(this).attr('id').lastIndexOf('slider');
         var fileNum = $(this).attr('id').substring(pos+6, $(this).attr('id').length);	
 
-        $(this).slider('value', testObject.TestState.Ratings[TestIdx][fileNum]);
+        $(this).slider('value', testObject.TestState.Ratings[3*CurrentTestIdx+TaskIdx-1][fileNum]);
         $(this).slider('refresh');
     });
 
@@ -927,7 +939,7 @@ MushraTest.prototype.readRatings = function (TestIdx) {
 
 // ###################################################################
 // save ratings to TestState object
-MushraTest.prototype.saveRatings = function (TestIdx) {
+MushraTest.prototype.saveRatings = function (CurrentTestIdx, TaskIdx) {
     var ratings = new Object();
     $(".rateSlider").each( function() {
         var pos = $(this).attr('id').lastIndexOf('slider');
@@ -944,7 +956,7 @@ MushraTest.prototype.saveRatings = function (TestIdx) {
     }
 
     if ((MaxRatingFound == true) || (this.TestConfig.RequireMaxRating == false)) {
-        this.TestState.Ratings[TestIdx] = ratings;
+        this.TestState.Ratings[3*CurrentTestIdx+TaskIdx-1] = ratings;
         return true;
     } else {
         $.alert("At least one of your ratings has to be " + this.TestConfig.RateMaxValue + " for valid results!", "Warning!")
@@ -972,16 +984,12 @@ MushraTest.prototype.createTestDOM = function (TestIdx) {
 
 		// create new instruction text		
 		var para = document.createElement('P');
-		if (this.TestConfig.Testsets[TestIdx].Instruction == 1) {		
-			var txt = document.createTextNode("Instruction 1: Most important: use high quality studio headphones and a good soundcard! \
-				Listen through all test files and test sets before you do any ratings to get used to the material. \
-				Rate the quality of the test items only compared to the reference on top. \
-				Try to rate the overall impression of a test item and don't concentrate on single aspects.");
-		} else if (this.TestConfig.Testsets[TestIdx].Instruction == 2) {
-			var txt = document.createTextNode("Instruction 2: Most important: use high quality studio headphones and a good soundcard! \
-				Listen through all test files and test sets before you do any ratings to get used to the material. \
-				Rate the quality of the test items only compared to the reference on top. \
-				Try to rate the overall impression of a test item and don't concentrate on single aspects.");
+		if (this.TestState.CurrentTask == 1) {		
+			var txt = document.createTextNode(this.TestConfig.Task1);
+		} else if (this.TestState.CurrentTask == 2) {
+			var txt = document.createTextNode(this.TestConfig.Task2);
+		} else if (this.TestState.CurrentTask == 3) {
+			var txt = document.createTextNode(this.TestConfig.Task3);
 		}
 		para.appendChild(txt);
 		$('#InstructionContainer').append(para);
@@ -1092,16 +1100,17 @@ MushraTest.prototype.formatResults = function () {
     var numWrong   = 0;
 
     // evaluate single tests
-    for (var i = 0; i < this.TestConfig.Testsets.length; i++) {  
+    for (var i = 0; i < (this.TestState.TestSequence.length * 3); i++) {  
         this.TestState.EvalResults[i]           = new Object();
-        this.TestState.EvalResults[i].TestID    = this.TestConfig.Testsets[i].TestID;
+        this.TestState.EvalResults[i].TestID    = this.TestConfig.Testsets[this.TestState.TestSequence[Math.floor(i/3)]].TestID;
 
-        if (this.TestState.TestSequence.indexOf(i)>=0) {
+        //if (this.TestState.TestSequence.indexOf(i)>=0) {
             this.TestState.EvalResults[i].Runtime   = this.TestState.Runtime[i];
             this.TestState.EvalResults[i].rating    = new Object();
             this.TestState.EvalResults[i].filename  = new Object();
 
-            resultstring += "<p><b>"+this.TestConfig.Testsets[i].Name + "</b> ("+this.TestConfig.Testsets[i].TestID+"), Runtime:" + this.TestState.Runtime[i]/1000 + "sec </p>\n";
+            resultstring += "<p><b>"+this.TestConfig.Testsets[this.TestState.TestSequence[Math.floor(i/3)]].Name
+							+ "</b> ("+this.TestConfig.Testsets[this.TestState.TestSequence[Math.floor(i/3)]].TestID+"), Runtime:" + this.TestState.Runtime[i]/1000 + "sec </p>\n";
 
             var tab = document.createElement('table');
             var row;
@@ -1113,7 +1122,7 @@ MushraTest.prototype.formatResults = function () {
             cell = row.insertCell(-1);
             cell.innerHTML = "Rating";
 
-            var fileArr    = this.TestConfig.Testsets[i].Files;
+            var fileArr    = this.TestConfig.Testsets[this.TestState.TestSequence[Math.floor(i/3)]].Files;
             var testResult = this.TestState.EvalResults[i];
 
 
@@ -1129,7 +1138,7 @@ MushraTest.prototype.formatResults = function () {
             });
             
             resultstring += tab.outerHTML + "\n";
-        }
+        //}
     }
    
     return resultstring;
