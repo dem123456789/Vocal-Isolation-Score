@@ -476,11 +476,11 @@ $.extend({ alert: function (message, title) {
 
         // stop time measurement
         var stopTime = new Date().getTime();
-        this.TestState.Runtime[this.TestState.CurrentTest*3+this.TestState.CurrentTask-1] += stopTime - this.TestState.startTime;
+        this.TestState.Runtime[this.TestState.CurrentTest*this.TestConfig.Tasksets.length+this.TestState.CurrentTask-1] += stopTime - this.TestState.startTime;
 
         // go to next test
-        if (!(this.TestState.CurrentTest == this.TestState.TestSequence.length-1 && this.TestState.CurrentTask == 3)) {
-			if (this.TestState.CurrentTask == 3) {
+        if (!(this.TestState.CurrentTest == this.TestState.TestSequence.length-1 && this.TestState.CurrentTask == this.TestConfig.Tasksets.length)) {
+			if (this.TestState.CurrentTask == this.TestConfig.Tasksets.length) {
 				this.TestState.CurrentTask = 1;
 				this.TestState.CurrentTest = this.TestState.CurrentTest+1;
 			} else {
@@ -539,10 +539,10 @@ $.extend({ alert: function (message, title) {
 
             // stop time measurement
             var stopTime = new Date().getTime();
-            this.TestState.Runtime[this.TestState.CurrentTest*3+this.TestState.CurrentTask-1] += stopTime - this.TestState.startTime;
+            this.TestState.Runtime[this.TestState.CurrentTest*this.TestConfig.Tasksets.length+this.TestState.CurrentTask-1] += stopTime - this.TestState.startTime;
             // go to previous test
 			if (this.TestState.CurrentTask == 1) {
-				this.TestState.CurrentTask = 3;
+				this.TestState.CurrentTask = this.TestConfig.Tasksets.length;
 				this.TestState.CurrentTest = this.TestState.CurrentTest-1;
 			} else {
 				this.TestState.CurrentTask = this.TestState.CurrentTask-1;
@@ -568,8 +568,8 @@ $.extend({ alert: function (message, title) {
             this.TestState.TestSequence = shuffleArray(this.TestState.TestSequence);
         }
 
-        this.TestState.Ratings = Array(this.TestState.TestSequence.length * 3);
-        this.TestState.Runtime = new Uint32Array(this.TestState.TestSequence.length * 3);
+        this.TestState.Ratings = Array(this.TestState.TestSequence.length * this.TestConfig.Tasksets.length);
+        this.TestState.Runtime = new Uint32Array(this.TestState.TestSequence.length * this.TestConfig.Tasksets.length);
 //        this.TestState.Runtime.forEach(function(element, index, array){array[index] = 0});
         this.TestState.startTime = 0;
 
@@ -594,7 +594,8 @@ $.extend({ alert: function (message, title) {
         this.createTestDOM(TestIdx);
 
         // set current test name
-        $('#TestHeading').html(this.TestConfig.Testsets[TestIdx].Name + " (" + (this.TestState.CurrentTest+1) + " of " + this.TestState.TestSequence.length + ") - Task "+ this.TestState.CurrentTask + "/3");
+        $('#TestHeading').html("Test " + (this.TestState.CurrentTest+1) + " of " + this.TestState.TestSequence.length + "<br>"
+							   + "Task "+ this.TestState.CurrentTask + "/" + this.TestConfig.Tasksets.length + " - " + this.TestConfig.Tasksets[this.TestState.CurrentTask-1].Label);
         $('#TestHeading').show();
 
         // hide everything instead of load animation
@@ -621,7 +622,7 @@ $.extend({ alert: function (message, title) {
         });
             
         // load and apply already existing ratings
-        if (typeof this.TestState.Ratings[this.TestState.CurrentTest*3+this.TestState.CurrentTask-1] !== 'undefined') this.readRatings(this.TestState.CurrentTest, this.TestState.CurrentTask);
+        if (typeof this.TestState.Ratings[this.TestState.CurrentTest*this.TestConfig.Tasksets.length+this.TestState.CurrentTask-1] !== 'undefined') this.readRatings(this.TestState.CurrentTest, this.TestState.CurrentTask);
 
         this.TestState.startTime = new Date().getTime();
             
@@ -931,7 +932,7 @@ MushraTest.prototype.readRatings = function (CurrentTestIdx, TaskIdx) {
         var pos = $(this).attr('id').lastIndexOf('slider');
         var fileNum = $(this).attr('id').substring(pos+6, $(this).attr('id').length);	
 
-        $(this).slider('value', testObject.TestState.Ratings[3*CurrentTestIdx+TaskIdx-1][fileNum]);
+        $(this).slider('value', testObject.TestState.Ratings[this.TestConfig.Tasksets.length*CurrentTestIdx+TaskIdx-1][fileNum]);
         $(this).slider('refresh');
     });
 
@@ -956,7 +957,7 @@ MushraTest.prototype.saveRatings = function (CurrentTestIdx, TaskIdx) {
     }
 
     if ((MaxRatingFound == true) || (this.TestConfig.RequireMaxRating == false)) {
-        this.TestState.Ratings[3*CurrentTestIdx+TaskIdx-1] = ratings;
+        this.TestState.Ratings[this.TestConfig.Tasksets.length*CurrentTestIdx+TaskIdx-1] = ratings;
         return true;
     } else {
         $.alert("At least one of your ratings has to be " + this.TestConfig.RateMaxValue + " for valid results!", "Warning!")
@@ -984,13 +985,15 @@ MushraTest.prototype.createTestDOM = function (TestIdx) {
 
 		// create new instruction text		
 		var para = document.createElement('P');
+		/*
 		if (this.TestState.CurrentTask == 1) {		
 			var txt = document.createTextNode(this.TestConfig.Task1);
 		} else if (this.TestState.CurrentTask == 2) {
 			var txt = document.createTextNode(this.TestConfig.Task2);
 		} else if (this.TestState.CurrentTask == 3) {
 			var txt = document.createTextNode(this.TestConfig.Task3);
-		}
+		}*/
+		var txt = document.createTextNode(this.TestConfig.Tasksets[this.TestState.CurrentTask-1].Description);
 		para.appendChild(txt);
 		$('#InstructionContainer').append(para);
 		
@@ -1100,17 +1103,17 @@ MushraTest.prototype.formatResults = function () {
     var numWrong   = 0;
 
     // evaluate single tests
-    for (var i = 0; i < (this.TestState.TestSequence.length * 3); i++) {  
+    for (var i = 0; i < (this.TestState.TestSequence.length * this.TestConfig.Tasksets.length); i++) {  
         this.TestState.EvalResults[i]           = new Object();
-        this.TestState.EvalResults[i].TestID    = this.TestConfig.Testsets[this.TestState.TestSequence[Math.floor(i/3)]].TestID;
+        this.TestState.EvalResults[i].TestID    = this.TestConfig.Testsets[this.TestState.TestSequence[Math.floor(i/this.TestConfig.Tasksets.length)]].TestID;
 
         //if (this.TestState.TestSequence.indexOf(i)>=0) {
             this.TestState.EvalResults[i].Runtime   = this.TestState.Runtime[i];
             this.TestState.EvalResults[i].rating    = new Object();
             this.TestState.EvalResults[i].filename  = new Object();
 
-            resultstring += "<p><b>"+this.TestConfig.Testsets[this.TestState.TestSequence[Math.floor(i/3)]].Name
-							+ "</b> ("+this.TestConfig.Testsets[this.TestState.TestSequence[Math.floor(i/3)]].TestID+"), Runtime:" + this.TestState.Runtime[i]/1000 + "sec </p>\n";
+            resultstring += "<p><b>"+this.TestConfig.Testsets[this.TestState.TestSequence[Math.floor(i/this.TestConfig.Tasksets.length)]].Name
+							+ "</b> ("+this.TestConfig.Testsets[this.TestState.TestSequence[Math.floor(i/this.TestConfig.Tasksets.length)]].TestID+"), Runtime:" + this.TestState.Runtime[i]/1000 + "sec </p>\n";
 
             var tab = document.createElement('table');
             var row;
