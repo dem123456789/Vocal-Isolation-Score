@@ -759,8 +759,9 @@ $.extend({ alert: function (message, title) {
     ListeningTest.prototype.SubmitTestResults = function () {
 
         var UserObj = new Object();
-        UserObj.UserName = $('#UserName').val();
-        UserObj.UserEmail = $('#UserEMail').val();
+        UserObj.Age = $('#Age').val();
+        UserObj.Gender = $('#Gender').val();
+		UserObj.MusicExp = $('#MusicExp').val();
         UserObj.UserComment = $('#UserComment').val();
 
         var EvalResults = this.TestState.EvalResults;        
@@ -771,7 +772,7 @@ $.extend({ alert: function (message, title) {
                     type: "POST",
                     timeout: 5000,
                     url: testHandle.TestConfig.BeaqleServiceURL,
-                    data: {'testresults':JSON.stringify(EvalResults), 'username':UserObj.UserName},
+                    data: {'testresults':JSON.stringify(EvalResults)},
                     dataType: 'json'})
             .done( function (response){
                     if (response.error==false) {
@@ -818,14 +819,15 @@ $.extend({ alert: function (message, title) {
     ListeningTest.prototype.DownloadTestResults = function () {
 
         var UserObj = new Object();
-        UserObj.UserName = $('#UserName').val();
-        UserObj.UserEmail = $('#UserEMail').val();
+        UserObj.Age = $('#Age').val();
+        UserObj.Gender = $('#Gender').val();
+		UserObj.MusicExp = $('#MusicExp').val();
         UserObj.UserComment = $('#UserComment').val();
 
         var EvalResults = this.TestState.EvalResults;        
         EvalResults.push(UserObj)
 
-        saveTextAsFile(JSON.stringify(EvalResults), getDateStamp() + "_" + UserObj.UserName + ".txt");
+        saveTextAsFile(JSON.stringify(EvalResults), getDateStamp() + ".txt");
 
         this.TestState.TestIsRunning = 0;
     }
