@@ -995,8 +995,13 @@ MushraTest.prototype.createTestDOM = function (TestIdx) {
 		} else if (this.TestState.CurrentTask == 3) {
 			var txt = document.createTextNode(this.TestConfig.Task3);
 		}*/
-		var txt = document.createTextNode(this.TestConfig.Tasksets[this.TestState.CurrentTask-1].Description);
-		para.appendChild(txt);
+		var br = document.createElement("br");
+		var label = document.createElement("b");
+		label.innerHTML = this.TestConfig.Tasksets[this.TestState.CurrentTask-1].Label + ":";
+		var description = document.createTextNode(this.TestConfig.Tasksets[this.TestState.CurrentTask-1].Description);
+		para.appendChild(label);
+		para.appendChild(br);
+		para.appendChild(description);		
 		$('#InstructionContainer').append(para);
 		
         // create new test table

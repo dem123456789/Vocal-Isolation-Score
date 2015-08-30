@@ -19,8 +19,7 @@ var TestConfig = {
   "Tasksets": [
 	  {
 	  "Label": "Vocal Isolation",
-	  "Description": "Vocal Isolation -\
-					  In this task you are required to judge how good the separation between the vocal and the instrumental components is. \
+	  "Description": "In this task you are required to judge how good the separation between the vocal and the instrumental components is. \
 					  An audio clip with audible vocals and inaudible instrumental should be rated high. \
 					  Conversely if the vocal and instrumental components are both equally audible then it should be rated low. \
 					  If the vocals are inaudible the clip should have a low rating. \
@@ -28,16 +27,14 @@ var TestConfig = {
 	  },
 	  {
 	  "Label": "Vocal Intelligibility",
-	  "Description": "Vocal Intelligibility -\
-					  In this task you are required to judge the overall intelligibility of the audio.\
+	  "Description": "In this task you are required to judge the overall intelligibility of the audio.\
 					  An audio clip which has words that are clearly articulated should be rated higher (i.e., there words are clear and can be understood).\
 					  Clips which have words that are difficult to understand (i.e., the words are severely degraded and difficult to make out should be rated lower).\
 					  In this task it does not matter if you can hear the instrumental portion, you are judging solely on the basis of the intelligibility of the vocals.",
 	  },
 	  {
 	  "Label": "Vocal Overall",
-	  "Description": "Vocal Overall -\
-					  In this task you are required to judge the overall performance of each algorithm.\
+	  "Description": "In this task you are required to judge the overall performance of each algorithm.\
 					  While each algorithm is designed to separate the vocal from the instrumental components, other quality factors are also important including: background distortion, audio artifacts (e.g., missing sounds, etc.), and other noisy interference that affect the overall perceived quality of the audio, in spite of the voice/music separation.\
 					  Rate the clips based on your perception of which algorithms possess the least amount of quality degrading effects (i.e., algorithms with the fewest perceived audio degradation effects should be rated higher).",
 	  },
