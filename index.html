@@ -103,8 +103,7 @@
             </div>
             <p class="submitOnline">
                 <!-- edit here if you want to change the information about online submission, e.g. add privacy policy information -->
-                Please submit the results to our server. Entering a name or email address is not mandatory
-                but it would help us to contact you if we have further questions. You can also leave a comment.
+                Please provide the information asked below and click submit to complete the experiment. 
             </p>
             <p class="submitDownload">
                 <!-- edit here if you want to change the information about online submission, e.g. add privacy policy information -->
@@ -112,15 +111,15 @@
                 but it would help us to contact you if we have further questions. You can also leave a comment.
             </p>
             <table border=1 style="margin-left: auto;margin-right: auto;">
-            <tr><td>Age:</td><td><input id="Age" type="text" size="1" maxlength="3" /></td></tr>
-            <tr><td>Gender:</td><td>
+            <tr><td align="left">Age:</td><td align="left"><input id="Age" type="text" size="1" maxlength="3" /></td></tr>
+            <tr><td align="left">Gender:</td><td align="left">
 			<input id="Gender" name="Gender" type="radio" value= "male"/>Male
 			<input id="Gender" name="Gender" type="radio" value= "female"/>Female</td></tr>
-			<tr><td>Musical Experience:</td><td>
+			<tr><td align="left">Musical Experience:</td><td align="left">
 			<input id="MusicExp" name="MusicExp" type="radio" value= "none"/>None<br />
 			<input id="MusicExp" name="MusicExp" type="radio" value= "some"/>Some Instrumental/Vocal Experience<br />
 			<input id="MusicExp" name="MusicExp" type="radio" value= "experienced"/> Experienced in Mixing/Recording Music</td></tr>
-            <tr><td>Your comment</td><td><textarea id="UserComment" cols="40" rows="4"></textarea></td></tr>
+            <tr><td align="left">Your comment</td><td><textarea id="UserComment" cols="40" rows="4"></textarea></td></tr>
             </table>
             <br />
             <button id="BtnSubmitData" class="submitOnline" onclick="testHandle.SubmitTestResults();">Submit</button>
