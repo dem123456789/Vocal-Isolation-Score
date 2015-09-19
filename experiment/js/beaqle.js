@@ -599,6 +599,7 @@ $.extend({ alert: function (message, title) {
 							   + "Task "+ this.TestState.CurrentTask + "/" + this.TestConfig.Tasksets.length + " - " + this.TestConfig.Tasksets[this.TestState.CurrentTask-1].Label);
         $('#TestHeading').show();
 		// set progress bar
+		$('#ProgressHeading').html("Completed " + ((this.TestState.CurrentTest)*3+this.TestState.CurrentTask) + "/" + this.TestState.TestSequence.length*this.TestConfig.Tasksets.length);
 		var progress = document.getElementById("Progress")
 		.setAttribute("value", (this.TestState.CurrentTest)*3+this.TestState.CurrentTask); 
         // hide everything instead of load animation
