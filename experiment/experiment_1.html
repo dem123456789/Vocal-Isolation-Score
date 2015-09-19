@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+
+    <!--
+    BeaqleJS - HTML5 and JavaScript framework for listening tests, <https://github.com/HSU-ANT/beaqlejs>
+
+    This file and all corresponding parts of BeaqleJS are published under the GPLv3 license, <http://www.gnu.org/licenses/>    
+    -->
+
+
+    <title>SVS Listening Test</title>
+    
+    <!-- load the test config file -->
+        <script src="config/mushra_config_exp1.js" type="text/javascript"></script>
+    <!---->
+    
+    <link type="text/css" href="css/smoothness/jquery-ui-1.8.18.custom.css" rel="Stylesheet" />
+    <link type="text/css" href="css/styles.css" rel="Stylesheet" />
+
+    <script src="js/jquery.js" type="text/javascript"></script>
+    <script src="js/jquery-ui.custom.min.js" type="text/javascript" ></script>
+    <script src="js/beaqle.js" type="text/javascript"></script>
+
+
+    <script type="text/javascript">
+    /* <![CDATA[ */
+        var testHandle;
+        window.onload=function() {
+
+            // Uncomment one of the following lines to choose the desired test class
+
+            testHandle = new MushraTest(TestConfig);    // <-- MUSHRA test class
+            //testHandle = new AbxTest(TestConfig);     // <-- ABX test class
+
+            $('#Footer').prepend(testHandle.browserFeatureString() + '<br/>');
+        };
+    /* ]]> */
+    </script>
+   
+</head>
+
+<body>
+
+<div id="Wrapper">
+
+    <div id="TestTitle" class="commonBox">
+        <!-- overall title at the top 
+             DO NOT EDIT! This box is automatically filled with content!
+        -->
+        Loading...
+    </div>
+    
+    <!-- is displayed during load -->
+    <div id="LoadOverlay" class="commonBox">
+        <img src="img/ajax-loader.gif"/> &nbsp;&nbsp;&nbsp; Loading...
+    </div>
+
+    <!-- introduction before the test starts -->
+    <div id="TestIntroduction" class="commonBox">
+        
+        <!-- edit here if you want to change the welcome message  and instructions -->
+
+        <div style="text-align:left">
+            Thanks for your interest in participating in the listening test. The overall test will roughly take 5 to 10 minutes. Please take the time and carefully rate every item.
+            <br />
+            <br />
+            We have prepared a short video which explains the procedure needed to be followed.
+            <br />
+            After you have seen the instruction video please proceed to the listening test.
+            <br /><br />
+		  <div id="InstructionVideo">
+				<iframe width="640" height="360" src="https://www.youtube-nocookie.com/embed/RIAercH2zgY" frameborder="0" allowfullscreen></iframe>
+				<br />
+				<h5> Instruction Video </h5>
+                <br />
+			</div>
+            By clicking the "Start!" button you concent to participate in this experiment with the understanding that the participation is entirely voluntary and you may leave the experiment at any time without any obligations.
+            <br/>
+        The complete consent document can be found <a href="../consent.pdf" title="Consent Document" onclick="window.open('../consent.pdf', 'newwindow', 'width=800, height=600'); return false;">here</a>.
+        </div>
+        <br />
+        <br />
+                        
+        <!-- this button starts the first test -->
+        <button id="BtnStartTest" onclick="testHandle.startTests();">Start!</button>	
+    </div>
+
+    <!-- final text after all tests have passed -->
+    <div id="TestEnd" class="commonBox">
+
+        <!-- edit here if you want to change the thank you message -->
+        Thank you very much!
+        <br />
+        <br />
+        
+        <!-- show some informations before submitting the results -->
+        <div id="SubmitBox">
+            <div id="SubmitError" class="error">
+                We are sorry, but the following error occurred during your submission:
+                <p id="ErrorCode"></p>
+            </div>
+            <p class="submitOnline">
+                <!-- edit here if you want to change the information about online submission, e.g. add privacy policy information -->
+                Please provide the information asked below and click submit to complete the experiment. 
+            </p>
+            <p class="submitDownload">
+                <!-- edit here if you want to change the information about online submission, e.g. add privacy policy information -->
+                Please download and save the results. Entering a name or email address is not mandatory 
+                but it would help us to contact you if we have further questions. You can also leave a comment.
+            </p>
+            <table border=1 style="margin-left: auto;margin-right: auto;">
+            <tr><td align="left">Age:</td><td align="left"><input id="Age" type="text" size="1" maxlength="3" /></td></tr>
+            <tr><td align="left">Gender:</td><td align="left">
+			<input id="Gender" name="Gender" type="radio" value= "male"/>Male
+			<input id="Gender" name="Gender" type="radio" value= "female"/>Female</td></tr>
+			<tr><td align="left">Musical Experience:</td><td align="left">
+			<input id="MusicExp" name="MusicExp" type="radio" value= "none"/>None<br />
+			<input id="MusicExp" name="MusicExp" type="radio" value= "some"/>Some Instrumental/Vocal Experience<br />
+			<input id="MusicExp" name="MusicExp" type="radio" value= "experienced"/> Experienced in Mixing/Recording Music</td></tr>
+            <tr><td align="left">Your comment</td><td><textarea id="UserComment" cols="40" rows="4"></textarea></td></tr>
+            </table>
+            <br />
+            <button id="BtnSubmitData" class="submitOnline" onclick="testHandle.SubmitTestResults();">Submit</button>
+            <button id="BtnDownloadData" class="submitDownload" onclick="testHandle.DownloadTestResults();">Download</button>
+            <br />
+			After submission, please proceed to Part two (Instrumental).
+            <!--<a href="experiment_2.html" title="Part two (Instrumental)" target="_self">Click here to proceed to Part two (Instrumental).</a>-->
+<p class="submitEmail error">
+          <!-- edit here if you want to change the information about email submission, e.g. add privacy policy information -->
+          Results should be send to <span class="supervisorEmail"></span>
+        </p>
+        </div>
+        
+        <!-- the test results are displayed in this box -->
+        <div id="ResultsBox">
+        </div>
+    </div>
+	
+	<div id="InstructionContainer" class="commonBox">
+        <!-- container for the instruction text
+             DO NOT EDIT! This box is automatically filled with content!
+        -->  
+	</div>	
+	
+    <div id="TableContainer" class="commonBox">
+        <!-- container for the test items and sliders 
+             DO NOT EDIT! This box is automatically filled with content!
+        -->    
+
+        <!-- heading for the single test -->
+        <div id="TestHeading">
+        </div>
+    
+    </div>
+
+    <!-- controls to go to next/previous test -->
+    <div id="TestControls" class="commonBox">
+        <button id="BtnNextTest">Next Test</>
+        <button id="BtnPrevTest">Previous Test</>
+    </div>
+	
+    <!-- playback control -->
+    <div id="PlayerControls" class="commonBox">
+
+        <div id="duration">
+            <span>00:00</span>
+        </div>
+        
+        <div id="TimeLine">
+            <div id="ProgressBar"></div>
+            <div id="ABRange"></div>
+        </div>
+        
+        <div>
+            <input id="ChkLoopAudio" type="checkbox" value="Loop" /><label for="BtnLoopAudio">Loop</label>				
+        </div>
+        
+        <div id="Volume">
+            Volume
+            <div id="VolumeSlider"></div>
+        </div>
+        <progress id="Progress" max="6" value="1"></progress>
+        <br style="clear:both"/>
+    
+    </div>
+
+    <!-- Footer -->
+    <div id="Footer">
+        This listening test has been created with <a href="https://github.com/HSU-ANT/beaqlejs" target="_blank">BeaqleJS</a>
+    </div>
+</div>
+
+</body>
+
+</html>
