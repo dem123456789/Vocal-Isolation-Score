@@ -158,8 +158,10 @@
 
     <!-- controls to go to next/previous test -->
     <div id="TestControls" class="commonBox">
+
         <button id="BtnNextTest">Next Test</>
         <button id="BtnPrevTest">Previous Test</>
+		
     </div>
 	
     <!-- playback control -->
@@ -174,22 +176,24 @@
             <div id="ABRange"></div>
         </div>
         
-        <div>
-            <input id="ChkLoopAudio" type="checkbox" value="Loop" /><label for="BtnLoopAudio">Loop</label>				
-        </div>
         
         <div id="Volume">
             Volume
             <div id="VolumeSlider"></div>
         </div>
+        
+		<div>
+            <input id="ChkLoopAudio" type="checkbox" value="Loop" /><label for="BtnLoopAudio" style="font-size:90%">Loop</label>				
+        </div>
 		<div id="ProgressHeading" >
 		
 		</div>
         <progress id="Progress" max="6" value="0"></progress>
-        <br style="clear:both"/>
-    
+		
+		<br style="clear:both"/>
+		<button id="BtnIncompleteSubmit">Submit Incomplete Results</button>	
     </div>
-
+	
     <!-- Footer -->
     <div id="Footer">
         This listening test has been created with <a href="https://github.com/HSU-ANT/beaqlejs" target="_blank">BeaqleJS</a>

@@ -182,6 +182,7 @@ progress[value]::-webkit-progress-bar {
     display: none;
 }
 
+
 #PlayerControls {
     display: none;	
 }
@@ -191,19 +192,34 @@ progress[value]::-webkit-progress-bar {
     margin-right:40px;
 }
 
+
 #BtnNextTest {
     float: right;
 }
 
+#BtnIncompleteSubmit {
+	font-size:10%;
+}
+
+#ProgressHeading{
+    font-size: 90%;
+	text-align:right;
+    width:120px;
+}
+
+#Progress{
+	float:right;
+}
+
 #Volume{
-    font-size: 70%;
+    font-size: 90%;
     text-align:center;
     width:80px;
 }
 
 #VolumeSlider {
     width:80px;
-    margin-top:0.2em;
+    margin-top:0.1em;
 }
 
 #duration {

@@ -10,7 +10,7 @@ var TestConfig = {
   "ShowResults": false,
   "LoopByDefault": true,
   "EnableABLoop": true,
-  "EnableOnlineSubmission": true,
+  "EnableOnlineSubmission": false,
   "BeaqleServiceURL": "http://svslisteningtest.gatech.edu/experiment/beaqleJS_Service.php",
   "SupervisorContact": "svs.listening@gmail.com",
   "RandomizeTestOrder": true,

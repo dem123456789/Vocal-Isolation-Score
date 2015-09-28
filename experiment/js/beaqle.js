@@ -448,20 +448,19 @@ $.extend({ alert: function (message, title) {
         $('#BtnPrevTest').button();
         $('#BtnPrevTest').on('click', $.proxy(handlerObject.prevTest, handlerObject));
         $('#BtnStartTest').button();
+		$('#BtnIncompleteSubmit').button();
+		$('#BtnIncompleteSubmit').on('click', $.proxy(handlerObject.SubmitIncomplete, handlerObject));
         $('#BtnSubmitData').button({ icons: { primary: 'ui-icon-signal-diag' }});     
         $('#BtnDownloadData').button({ icons: { primary: 'ui-icon-arrowthickstop-1-s' }});
                 
 
         // install handler to warn user when test is running and he tries to leave the page
-        var testHandle = this.TestState
+        var testHandle = this.TestState;
         window.onbeforeunload = function (e) {
             if (testHandle.TestIsRunning==true) {
-                return 'The listening test is not yet finished!';
-            } else {
-                return;
-            }
+				return 'Leave without Submission?';
+			}
         }
-
 
     }
 
@@ -491,7 +490,6 @@ $.extend({ alert: function (message, title) {
         } else {
             // if previous test was last one, ask before loading final page and then exit test
             if (confirm('This was the last test. Do you want to finish?')) {
-            
                 $('#TableContainer').hide();
 				$('#InstructionContainer').hide();
                 $('#PlayerControls').hide();
@@ -522,7 +520,7 @@ $.extend({ alert: function (message, title) {
                         $("#SubmitBox > .submitDownload").hide();
                         $("#ResultsBox").show();
                     }
-                }
+				}
             }
             return;
         }
@@ -632,6 +630,57 @@ $.extend({ alert: function (message, title) {
             
     }
 
+    // ###################################################################    
+    // submit incomplete results
+	ListeningTest.prototype.SubmitIncomplete = function() {
+
+        this.pauseAllAudios();
+
+        // save ratings from last test
+        if (this.saveRatings(this.TestState.CurrentTest, this.TestState.CurrentTask)==false)
+            return;
+
+        // stop time measurement
+        var stopTime = new Date().getTime();
+        this.TestState.Runtime[this.TestState.CurrentTest*this.TestConfig.Tasksets.length+this.TestState.CurrentTask-1] += stopTime - this.TestState.startTime;
+
+            // if previous test was last one, ask before loading final page and then exit test
+            if (confirm('Test incomplete. Do you want to finish?')) {
+                $('#TableContainer').hide();
+				$('#InstructionContainer').hide();
+                $('#PlayerControls').hide();
+                $('#TestControls').hide();
+                $('#TestEnd').show();
+
+                $('#ResultsBox').html(this.formatResults());
+                if (this.TestConfig.ShowResults)
+                    $("#ResultsBox").show();
+                else
+                    $("#ResultsBox").hide();
+
+                $("#SubmitBox").show();
+
+                $("#SubmitBox > .submitEmail").hide();
+                if (this.TestConfig.EnableOnlineSubmission) {
+                    $("#SubmitBox > .submitOnline").show();
+                    $("#SubmitBox > .submitDownload").hide();
+                } else {
+                    $("#SubmitBox > .submitOnline").hide();
+                    if (this.TestConfig.SupervisorContact) {
+                        $("#SubmitBox > .submitEmail").show();
+                        $(".supervisorEmail").html(this.TestConfig.SupervisorContact);
+                    }
+                    if (this.browserFeatures.webAPIs['Blob']) {
+                        $("#SubmitBox > .submitDownload").show();
+                    } else {
+                        $("#SubmitBox > .submitDownload").hide();
+                        $("#ResultsBox").show();
+                    }
+				}
+            }
+            return;
+        
+	}
     // ###################################################################
     // pause all audios
     ListeningTest.prototype.pauseAllAudios = function () {    
@@ -1140,17 +1189,18 @@ MushraTest.prototype.formatResults = function () {
             var fileArr    = this.TestConfig.Testsets[this.TestState.TestSequence[Math.floor(i/3)]].Files;
             var testResult = this.TestState.EvalResults[i];
 
+			if(this.TestState.Ratings[i]) {
+				$.each(this.TestState.Ratings[i], function(fileID, rating) { 
+					row  = tab.insertRow(-1);
+					cell = row.insertCell(-1);
+					cell.innerHTML = fileArr[fileID].substr(6);
+					cell = row.insertCell(-1);
+					cell.innerHTML = rating;
 
-            $.each(this.TestState.Ratings[i], function(fileID, rating) { 
-                row  = tab.insertRow(-1);
-                cell = row.insertCell(-1);
-                cell.innerHTML = fileArr[fileID].substr(6);
-                cell = row.insertCell(-1);
-                cell.innerHTML = rating;
-
-                testResult.rating[fileID]   = rating;
-                testResult.filename[fileID] = fileArr[fileID].substr(6);
-            });
+					testResult.rating[fileID]   = rating;
+					testResult.filename[fileID] = fileArr[fileID].substr(6);
+				});
+			}
             
             resultstring += tab.outerHTML + "\n";
         //}
