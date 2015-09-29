@@ -448,8 +448,7 @@ $.extend({ alert: function (message, title) {
         $('#BtnPrevTest').button();
         $('#BtnPrevTest').on('click', $.proxy(handlerObject.prevTest, handlerObject));
         $('#BtnStartTest').button();
-		$('#BtnIncompleteSubmit').button();
-		$('#BtnIncompleteSubmit').on('click', $.proxy(handlerObject.SubmitIncomplete, handlerObject));
+		$('#IncompleteSubmit').on('click', $.proxy(handlerObject.SubmitIncomplete, handlerObject));
         $('#BtnSubmitData').button({ icons: { primary: 'ui-icon-signal-diag' }});     
         $('#BtnDownloadData').button({ icons: { primary: 'ui-icon-arrowthickstop-1-s' }});
                 
@@ -635,7 +634,6 @@ $.extend({ alert: function (message, title) {
 	ListeningTest.prototype.SubmitIncomplete = function() {
 
         this.pauseAllAudios();
-
         // save ratings from last test
         if (this.saveRatings(this.TestState.CurrentTest, this.TestState.CurrentTask)==false)
             return;
@@ -645,7 +643,7 @@ $.extend({ alert: function (message, title) {
         this.TestState.Runtime[this.TestState.CurrentTest*this.TestConfig.Tasksets.length+this.TestState.CurrentTask-1] += stopTime - this.TestState.startTime;
 
             // if previous test was last one, ask before loading final page and then exit test
-            if (confirm('Test incomplete. Do you want to finish?')) {
+            if (confirm('Test is incomplete. Do you want to finish?')) {
                 $('#TableContainer').hide();
 				$('#InstructionContainer').hide();
                 $('#PlayerControls').hide();
@@ -678,8 +676,7 @@ $.extend({ alert: function (message, title) {
                     }
 				}
             }
-            return;
-        
+			return false; // this trick is to avoid unbeforeunload being called
 	}
     // ###################################################################
     // pause all audios

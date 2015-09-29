@@ -182,7 +182,6 @@ progress[value]::-webkit-progress-bar {
     display: none;
 }
 
-
 #PlayerControls {
     display: none;	
 }
@@ -197,8 +196,13 @@ progress[value]::-webkit-progress-bar {
     float: right;
 }
 
+#IncompleteSubmit {
+	font-size:70%;
+	float:right;
+}
+
 #BtnIncompleteSubmit {
-	font-size:10%;
+	font-size:70%;
 }
 
 #ProgressHeading{
