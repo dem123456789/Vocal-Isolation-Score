@@ -173,6 +173,10 @@ progress[value]::-webkit-progress-bar {
     display: none;
 }
 
+#DirectBox {
+    display: none;
+}
+
 #SubmitBox #SubmitError {
     color: red;
     display: none;

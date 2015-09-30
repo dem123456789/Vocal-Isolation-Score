@@ -29,7 +29,8 @@
     /* <![CDATA[ */
         var testHandle;
         window.onload=function() {
-
+			//set progress bar max value
+			document.getElementById("Progress").setAttribute("max",TestConfig.MaxTestsPerRun * TestConfig.Tasksets.length);
             // Uncomment one of the following lines to choose the desired test class
 
             testHandle = new MushraTest(TestConfig);    // <-- MUSHRA test class
@@ -125,12 +126,16 @@
             <br />
             <button id="BtnSubmitData" class="submitOnline" onclick="testHandle.SubmitTestResults();">Submit</button>
             <button id="BtnDownloadData" class="submitDownload" onclick="testHandle.DownloadTestResults();">Download</button>
-            <p class="submitEmail error">
-                <!-- edit here if you want to change the information about email submission, e.g. add privacy policy information -->
-                Results should be send to <span class="supervisorEmail"></span>
-            </p>
+            <br />
+			
+		  <p class="submitEmail error">
+          <!-- edit here if you want to change the information about email submission, e.g. add privacy policy information -->
+          Results should be send to <span class="supervisorEmail"></span>
+          </p>
         </div>
-        
+        <div id="DirectBox"> 
+		After submission, you can proceed to <a href="experiment_1.html" title="Part one (Vocal)" target="_self">Part one</a> (Vocal).
+        </div>		
         <!-- the test results are displayed in this box -->
         <div id="ResultsBox">
         </div>
@@ -155,8 +160,10 @@
 
     <!-- controls to go to next/previous test -->
     <div id="TestControls" class="commonBox">
-        <button id="BtnNextTest">Next Test</>
-        <button id="BtnPrevTest">Previous Test</>
+
+        <button id="BtnNextTest">Next Test</button>
+        <button id="BtnPrevTest">Previous Test</button>
+		
     </div>
 	
     <!-- playback control -->
@@ -171,19 +178,24 @@
             <div id="ABRange"></div>
         </div>
         
-        <div>
-            <input id="ChkLoopAudio" type="checkbox" value="Loop" /><label for="BtnLoopAudio">Loop</label>				
-        </div>
         
         <div id="Volume">
             Volume
             <div id="VolumeSlider"></div>
         </div>
         
-        <br style="clear:both"/>
-    
+		<div>
+            <input id="ChkLoopAudio" type="checkbox" value="Loop" /><label for="BtnLoopAudio" style="font-size:90%">Loop</label>				
+        </div>
+		<div id="ProgressHeading" >
+		
+		</div>
+        <progress id="Progress" value="0"></progress>
+		
+		<br style="clear:both"/>
+		<a href id="IncompleteSubmit">Submit Incomplete Results</a>	
     </div>
-
+	
     <!-- Footer -->
     <div id="Footer">
         This listening test has been created with <a href="https://github.com/HSU-ANT/beaqlejs" target="_blank">BeaqleJS</a>

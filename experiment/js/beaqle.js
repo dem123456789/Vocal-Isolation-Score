@@ -362,7 +362,6 @@ $.extend({ alert: function (message, title) {
     // ###################################################################
     // constructor and initialization
     var ListeningTest = function (TestData) {
-
         if (arguments.length == 0) return;
 
         // check if config file is valid
@@ -489,6 +488,7 @@ $.extend({ alert: function (message, title) {
         } else {
             // if previous test was last one, ask before loading final page and then exit test
             if (confirm('This was the last test. Do you want to finish?')) {
+				this.TestState.TestIsRunning = 0;
                 $('#TableContainer').hide();
 				$('#InstructionContainer').hide();
                 $('#PlayerControls').hide();
@@ -596,9 +596,9 @@ $.extend({ alert: function (message, title) {
 							   + "Task "+ this.TestState.CurrentTask + "/" + this.TestConfig.Tasksets.length + " - " + this.TestConfig.Tasksets[this.TestState.CurrentTask-1].Label);
         $('#TestHeading').show();
 		// set progress bar
-		$('#ProgressHeading').html("Completed " + ((this.TestState.CurrentTest)*3+this.TestState.CurrentTask) + "/" + this.TestState.TestSequence.length*this.TestConfig.Tasksets.length);
+		$('#ProgressHeading').html("Completed " + ((this.TestState.CurrentTest)*this.TestConfig.Tasksets.length+this.TestState.CurrentTask) + "/" + this.TestState.TestSequence.length*this.TestConfig.Tasksets.length);
 		var progress = document.getElementById("Progress")
-		.setAttribute("value", (this.TestState.CurrentTest)*3+this.TestState.CurrentTask); 
+		.setAttribute("value", (this.TestState.CurrentTest)*this.TestConfig.Tasksets.length+this.TestState.CurrentTask); 
         // hide everything instead of load animation
         $('#TestIntroduction').hide();
         $('#TestControls').hide();
@@ -644,6 +644,7 @@ $.extend({ alert: function (message, title) {
 
             // if previous test was last one, ask before loading final page and then exit test
             if (confirm('Test is incomplete. Do you want to finish?')) {
+				this.TestState.TestIsRunning = 0;
                 $('#TableContainer').hide();
 				$('#InstructionContainer').hide();
                 $('#PlayerControls').hide();
@@ -827,6 +828,7 @@ $.extend({ alert: function (message, title) {
             .done( function (response){
                     if (response.error==false) {
                         $('#SubmitBox').html("Your submission was successful.<br/><br/>");
+						$('#DirectBox').show();
                         testHandle.TestState.TestIsRunning = 0;
                     } else {
                         $('#SubmitError').show();
@@ -977,7 +979,7 @@ MushraTest.prototype.createFileMapping = function (TestIdx) {
 // read ratings from TestState object
 MushraTest.prototype.readRatings = function (Tasklength, CurrentTestIdx, TaskIdx) {
     
-    if ((3*CurrentTestIdx+TaskIdx-1 in this.TestState.Ratings)==false) return false;
+    if ((this.TestConfig.Tasksets.length*CurrentTestIdx+TaskIdx-1 in this.TestState.Ratings)==false) return false;
     
     var testObject = this;
     $(".rateSlider").each( function() {
@@ -1034,7 +1036,6 @@ MushraTest.prototype.createTestDOM = function (TestIdx) {
         if (!this.TestState.FileMappings[TestIdx]) {
                 this.createFileMapping(TestIdx);
         }
-
 		// create new instruction text		
 		var para = document.createElement('P');
 		/*
@@ -1183,7 +1184,7 @@ MushraTest.prototype.formatResults = function () {
             cell = row.insertCell(-1);
             cell.innerHTML = "Rating";
 
-            var fileArr    = this.TestConfig.Testsets[this.TestState.TestSequence[Math.floor(i/3)]].Files;
+            var fileArr    = this.TestConfig.Testsets[this.TestState.TestSequence[Math.floor(i/this.TestConfig.Tasksets.length)]].Files;
             var testResult = this.TestState.EvalResults[i];
 
 			if(this.TestState.Ratings[i]) {
@@ -1220,7 +1221,6 @@ AbxTest.prototype.constructor = AbxTest;
 
 // implement specific code
 AbxTest.prototype.createTestDOM = function (TestIdx) {
-
         // clear old test table
         if ($('#TableContainer > table')) {
             $('#TableContainer > table').remove();

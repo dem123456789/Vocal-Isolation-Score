@@ -28,8 +28,10 @@
     <script type="text/javascript">
     /* <![CDATA[ */
         var testHandle;
-        window.onload=function() {
 
+        window.onload=function() {
+			//set progress bar max value		
+			document.getElementById("Progress").setAttribute("max",TestConfig.MaxTestsPerRun * TestConfig.Tasksets.length);
             // Uncomment one of the following lines to choose the desired test class
 
             testHandle = new MushraTest(TestConfig);    // <-- MUSHRA test class
@@ -126,14 +128,15 @@
             <button id="BtnSubmitData" class="submitOnline" onclick="testHandle.SubmitTestResults();">Submit</button>
             <button id="BtnDownloadData" class="submitDownload" onclick="testHandle.DownloadTestResults();">Download</button>
             <br />
-			After submission, please proceed to Part two (Instrumental).
-            <!--<a href="experiment_2.html" title="Part two (Instrumental)" target="_self">Click here to proceed to Part two (Instrumental).</a>-->
-<p class="submitEmail error">
+			
+		  <p class="submitEmail error">
           <!-- edit here if you want to change the information about email submission, e.g. add privacy policy information -->
           Results should be send to <span class="supervisorEmail"></span>
-        </p>
+          </p>
         </div>
-        
+        <div id="DirectBox">
+			After submission, you can proceed to <a href="experiment_2.html" title="Part two (Instrumental)" target="_self">Part two</a> (Instrumental).
+        </div>        
         <!-- the test results are displayed in this box -->
         <div id="ResultsBox">
         </div>
@@ -188,7 +191,7 @@
 		<div id="ProgressHeading" >
 		
 		</div>
-        <progress id="Progress" max="6" value="0"></progress>
+        <progress id="Progress" value="0"></progress>
 		
 		<br style="clear:both"/>
 		<a href id="IncompleteSubmit">Submit Incomplete Results</a>	
