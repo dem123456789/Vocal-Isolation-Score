@@ -173,6 +173,10 @@ progress[value]::-webkit-progress-bar {
     display: none;
 }
 
+#DirectBox {
+    display: none;
+}
+
 #SubmitBox #SubmitError {
     color: red;
     display: none;
@@ -191,19 +195,39 @@ progress[value]::-webkit-progress-bar {
     margin-right:40px;
 }
 
+
 #BtnNextTest {
     float: right;
 }
 
+#IncompleteSubmit {
+	font-size:70%;
+	float:right;
+}
+
+#BtnIncompleteSubmit {
+	font-size:70%;
+}
+
+#ProgressHeading{
+    font-size: 90%;
+	text-align:right;
+    width:120px;
+}
+
+#Progress{
+	float:right;
+}
+
 #Volume{
-    font-size: 70%;
+    font-size: 90%;
     text-align:center;
     width:80px;
 }
 
 #VolumeSlider {
     width:80px;
-    margin-top:0.2em;
+    margin-top:0.1em;
 }
 
 #duration {
