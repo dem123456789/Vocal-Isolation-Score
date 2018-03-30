@@ -1,6 +1,6 @@
 # Vocal Isolation Score
 
-Towards Development of No-reference Objective Measures for Perceptual Evaluation of Singing Voice Separation
+Towards Development of No-reference Objective Measures for Perceptual Evaluation of Singing Voice Separation  
 [Take Experiment](http://dem123456789.github.io/beaqlejsDEM/demo/mushra)
 ## Abstract
 
