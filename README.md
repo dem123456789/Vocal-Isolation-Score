@@ -1,7 +1,7 @@
 # Vocal Isolation Score
 
 Towards Development of No-reference Objective Measures for Perceptual Evaluation of Singing Voice Separation  
-[Take Experiment](http://dem123456789.github.io/beaqlejsDEM/demo/mushra)
+[Take Experiment](http://dem123456789.github.io/Vocal-Isolation-Score/demo/mushra)
 ## Abstract
 
 1. Singing Voice Separation (SVS) uses audio source separation methods to isolate the vocal component from the background accompaniment in a song mix. A key challenge currently associated with evaluation of SVS is a lack of objective measures which correlate consistently with subjective evaluation. Additionally, the current state-of-the-art evaluation measures require the use of unmixed vocal and instrumental tracks which are often not available. The research presented in this thesis is an attempt to address these challenges by introducing two new objective measures for perceptually relevant evaluation of SVS.    
